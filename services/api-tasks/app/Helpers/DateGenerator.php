@@ -45,10 +45,6 @@ abstract class DateGenerator
                 $this->monthly();
                 break;
 
-            case ScheduledTaskMonths::EVERY_3_MONTHS;
-                $this->quarterly();
-                break;
-
             default:
                 if($specificDateToExecute){
                     $this->yearlyOn($this->scheduledTask->months->value, $specificDateToExecute);

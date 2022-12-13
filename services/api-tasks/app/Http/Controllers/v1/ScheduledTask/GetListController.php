@@ -11,7 +11,7 @@ class GetListController extends Controller
 {
     public function __invoke(Request $request)
     {
-        $scheduledTasks = ScheduledTask::paginate($request->get('limit', 10));
+        $scheduledTasks = ScheduledTask::with(['user'])->orderBy('id', 'desc')->paginate($request->get('limit', 10));
         return $this->successResponse(ScheduledTaskResource::collection($scheduledTasks));
     }
 }

@@ -8,7 +8,6 @@ Enum ScheduledTaskMonths: int
     use EnumsToArray;
 
     case EVERY_MONTH = 100;
-    case EVERY_3_MONTHS = 103;
     case JANUARY = 1;
     case FEBRUARY = 2;
     case MARCH = 3;
@@ -26,7 +25,6 @@ Enum ScheduledTaskMonths: int
     {
         return match($this) {
             ScheduledTaskMonths::EVERY_MONTH => 'Every month',
-            ScheduledTaskMonths::EVERY_3_MONTHS => 'Every 3 months',
             ScheduledTaskMonths::JANUARY => 'January',
             ScheduledTaskMonths::FEBRUARY => 'February',
             ScheduledTaskMonths::MARCH => 'March',
@@ -46,7 +44,6 @@ Enum ScheduledTaskMonths: int
     {
         return match($label) {
             'Every month' => ScheduledTaskMonths::EVERY_MONTH,
-            'Every 3 months' => ScheduledTaskMonths::EVERY_3_MONTHS,
             'January' => ScheduledTaskMonths::JANUARY,
             'February' => ScheduledTaskMonths::FEBRUARY,
             'March' => ScheduledTaskMonths::MARCH,

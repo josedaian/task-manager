@@ -4,12 +4,13 @@ namespace App\Models;
 
 class User
 {
-    private $name, $email;
+    private $name, $email, $id;
 
-    public function __construct(string $name, string $email)
+    public function __construct(string $name, string $email, string $id)
     {
         $this->name = $name;
         $this->email = $email;
+        $this->id = $id;
     }
 
     public function getName(): ?string 
@@ -17,13 +18,18 @@ class User
         return $this->name;
     }
 
-    function getEmail(): ?string  
+    public function getEmail(): ?string  
     {
         return $this->email;
     }
 
+    public function getId(): ?string
+    {
+        return $this->id;
+    }
+
     static function buildFromApiModel(\stdClass $apiModel): self
     {
-        return new User($apiModel->name, $apiModel->email);
+        return new User($apiModel->name, $apiModel->email, $apiModel->id);
     }
 }

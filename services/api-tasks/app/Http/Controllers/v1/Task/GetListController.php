@@ -13,7 +13,10 @@ class GetListController extends Controller
     public function __invoke(Request $request)
     {
         $filterGroup = TaskFilterGroup::fromLabel($request->get('filterGroup', TaskFilterGroup::TODAY->label()));
-        $tasks = Task::filterGroup($filterGroup)->paginate($request->get('limit', 10));
+        $tasks = Task::filterGroup($filterGroup)
+            ->scheduledTask($request->get('scheduledTaskId'))
+            ->orderBy('execute_at', 'asc')
+            ->paginate($request->get('limit', 10));
         return $this->successResponse(TaskResource::collection($tasks));
     }
 }

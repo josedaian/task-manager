@@ -31,4 +31,16 @@ trait ApiRequest
             ->withOptions($requestOptions['options'])
             ->post($requestOptions['url'], $data);
     }
+
+    /**
+     * @param array $requestOptions 
+     * @param array $data 
+     * @return Response 
+     * @throws Exception 
+     */
+    function apiPatch(array $requestOptions, array $data = []): Response {
+        return Http::withHeaders($requestOptions['headers'])
+            ->withOptions($requestOptions['options'])
+            ->patch($requestOptions['url'], $data);
+    }
 }

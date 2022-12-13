@@ -24,11 +24,28 @@ class AuthController extends Controller
 
                 $authData = $loginTask->getResultData();
                 AuthSessionHelper::buildNew($authData->token, $authData->user);
-                return redirect()->route('dashboard.index');
+                return redirect()->route('tasks.index');
 
             }
             return view('auth.login');
         });
+    }
+
+    public function signUp(Request $request)
+    {
+        $data = [
+            "name" => $request->name,
+            "password" => $request->pass,
+            "email" => $request->email,
+        ];
+
+        $signUpTask = $this->apiClient->authSignUp($data);
+
+        if(!$signUpTask->isSuccess()){
+            return redirect()->route('auth.login')->with('alert', ['type' => 'error', 'text' => $signUpTask->getResultMessage(), 'autoDismiss' => 5]);
+        }else{
+            return redirect()->route('auth.login')->with('alert', ['type' => 'success', 'text' => 'Success! New record in the house', 'autoDismiss' => 5]);
+        }
     }
 
     function logout(Request $request)

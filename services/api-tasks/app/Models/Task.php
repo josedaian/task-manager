@@ -24,6 +24,18 @@ class Task extends Model
         'status' => TaskStatus::class
     ];
 
+    protected static function booted()
+    {
+        static::updated(function ($task) {
+            if($task->wasChanged('status') && $task->status === TaskStatus::COMPLETED){
+                $scheduledTask = ScheduledTask::find($task->scheduled_task_id);
+                $scheduledTask->total_executed = $scheduledTask->total_executed + 1;
+                $scheduledTask->last_execution = $task->updated_at;
+                $scheduledTask->save();
+            }
+        });
+    }
+
     public static function createByScheduledTask(ScheduledTask $scheduledTask, Carbon $executeAt): Task
     {
         $task = new Task;
@@ -37,7 +49,13 @@ class Task extends Model
 
     public function scopeFilterGroup($query, TaskFilterGroup $filter)
     {
-        // dd($filter->range());
         return $query->whereBetween('execute_at', $filter->range());
+    }
+
+    public function scopeScheduledTask($query, ?int $scheduledTaskId = null)
+    {
+        if($scheduledTaskId){
+            return $query->where('scheduled_task_id', $scheduledTaskId);
+        }
     }
 }

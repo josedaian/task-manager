@@ -29,6 +29,7 @@ Route::prefix('v1')->middleware('api.version:1')->group(function (){
         Route::prefix('tasks')->group(function (){
             Route::get('/', \App\Http\Controllers\v1\Task\GetListController::class);
             Route::get('/resources', \App\Http\Controllers\v1\Task\GetResourceController::class);
+            Route::patch('/completed/{id}', \App\Http\Controllers\v1\Task\PatchStatusCompletedController::class);
         });
     });
 });

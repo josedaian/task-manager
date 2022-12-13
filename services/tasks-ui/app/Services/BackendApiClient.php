@@ -36,6 +36,14 @@ class BackendApiClient
         },['noAuth' => true]);
     }
 
+    function authSignUp(array $data): TaskResultHelper 
+    {
+        return $this->invokeApiEndpoint('/auth/register', function(array $requestParams) use($data)
+        {
+            return $this->apiPost($requestParams, $data);
+        },['noAuth' => true]);
+    }
+
     function taskResources(): TaskResultHelper 
     {
         return $this->invokeApiEndpoint('/tasks/resources', function(array $requestParams)
@@ -44,11 +52,19 @@ class BackendApiClient
         });
     }
 
-    function taskList(string $filter, int $page = 1): TaskResultHelper 
+    function taskList(string $filter, int $page = 1, ?int $scheduledTaskId = null): TaskResultHelper 
     {
-        return $this->invokeApiEndpoint('/tasks', function(array $requestParams) use($filter, $page)
+        return $this->invokeApiEndpoint('/tasks', function(array $requestParams) use($filter, $page, $scheduledTaskId)
         {
-            return $this->apiGet($requestParams, ['filterGroup' => $filter, 'page' => $page]);
+            return $this->apiGet($requestParams, ['filterGroup' => $filter, 'page' => $page, 'scheduledTaskId' => $scheduledTaskId]);
+        });
+    }
+
+    function taskCompleted(int $taskId): TaskResultHelper 
+    {
+        return $this->invokeApiEndpoint("/tasks/completed/$taskId", function(array $requestParams)
+        {
+            return $this->apiPatch($requestParams);
         });
     }
 
@@ -65,6 +81,14 @@ class BackendApiClient
         return $this->invokeApiEndpoint('/scheduled-tasks', function(array $requestParams) use($data)
         {
             return $this->apiPost($requestParams, $data);
+        });
+    }
+
+    function scheduledTaskList(int $page = 1): TaskResultHelper 
+    {
+        return $this->invokeApiEndpoint('/scheduled-tasks', function(array $requestParams) use($page)
+        {
+            return $this->apiGet($requestParams, ['page' => $page]);
         });
     }
 

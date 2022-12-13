@@ -40,14 +40,16 @@
                                     <tr>
                                         <th>{{ __('#') }}</th>
                                         <th>{{ __('Execute At') }}</th>
+                                        <th>{{ __('Scheduling ID') }}</th>
                                         <th>{{ __('Status') }}</th>
                                         <th>{{ __('Created at') }}</th>
+                                        <th>{{ __('Actions') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @if (count($list->data) <= 0)
                                         <tr>
-                                            <td colspan="4" class="text-center">{{ __('No data available') }}</td>
+                                            <td colspan="6" class="text-center">{{ __('No data available') }}</td>
                                         </tr>
                                     @endif
 
@@ -55,8 +57,14 @@
                                         <tr>
                                             <td>{{ $data->id }}</td>
                                             <td>{{ $data->executeAt }}</td>
+                                            <td>{{ $data->scheduledTaskId }}</td>
                                             <td>{{ $data->status }}</td>
                                             <td>{{ $data->createdAt }}</td>
+                                            <td>
+                                                @if(session('_user')->id == $data->userId && $data->status == 'pending')
+                                                    <a href="{{ route('tasks.completed', ['taskId' => $data->id]) }}" class="btn btn-primary btn-sm"><i class="fas fa-clipboard-check"></i> completed</a>
+                                                @endif
+                                            </td>
                                         </tr>
                                     @endforeach
                                 </tbody>

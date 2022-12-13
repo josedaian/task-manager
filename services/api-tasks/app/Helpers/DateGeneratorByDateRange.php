@@ -12,11 +12,16 @@ class DateGeneratorByDateRange extends DateGenerator
         $executeDate = $this->scheduledTask->execute_from;
         /** @var Carbon $lastDate */
         $lastDate = $this->scheduledTask->execute_to;
-        
+
         $cron = $this->getCronInstance();
         $executeDate = $cron->getNextRunDate($executeDate, 0, true);
-        $dates[] = $executeDate;
 
+        if($lastDate->lt($executeDate)){
+            return [];
+        }
+
+        $dates[] = $executeDate;
+        
         for(;;){
             $result = $cron->getNextRunDate($executeDate);
             $executeDate = clone $result;

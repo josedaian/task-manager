@@ -51,6 +51,11 @@ class ScheduledTask extends Model
         });
     }
 
+    public function user()
+    {
+        return $this->hasOne(User::class, 'id', 'user_id');
+    }
+
     public function getDaysOfWeekEnumsAttribute(): array
     {
         $days = [];
@@ -110,9 +115,12 @@ class ScheduledTask extends Model
         /** @var DateGenerator $dateGenerator */
         $dateGenerator = new $dateGeneratorClass($this);
         $dates = $dateGenerator->execute();
-        $this->total_tasks = count($dates);
-        $this->execute_from = Carbon::parse($dates[0]);
-        $this->execute_to = Carbon::parse(end($dates));
+        $totalTasks = count($dates);
+        $this->total_tasks = $totalTasks;
+        if($totalTasks > 0){
+            $this->execute_from = Carbon::parse($dates[0]);
+            $this->execute_to = Carbon::parse(end($dates));
+        }
         $this->save();
     }
 }

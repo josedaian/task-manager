@@ -26,6 +26,7 @@ class ScheduledTaskResource extends JsonResource
             'status' => $this->status->label(),
             'userId' => $this->user_id,
             'createdAt' => $this->created_at->toIso8601String(),
+            'user' => new UserResource($this->whenLoaded('user')),
         ];
     }
 }

@@ -9,6 +9,19 @@ class ScheduleController extends Controller
     public function index(Request $request)
     {
         return $this->dispatchRequest($request, function() use($request){
+            $task = $this->apiClient->scheduledTaskList($request->get('page', 1));
+    
+            if(!$task->isSuccess()){
+                return redirect()->route('tasks.index')->with('alert', ['type' => 'error', 'text' => $task->getResultMessage(), 'autoDismiss' => 5]);
+            }
+
+            return view('scheduled-tasks.index')->with(['list' => $task->getResultData()]);
+        });
+    }
+
+    public function create(Request $request)
+    {
+        return $this->dispatchRequest($request, function() use($request){
             $scheduleTask = $this->apiClient->scheduleResources();
     
             if(!$scheduleTask->isSuccess()){
@@ -32,7 +45,7 @@ class ScheduleController extends Controller
                 return [$value => $value];
             });
             
-            return view('scheduled-tasks.index')->with([
+            return view('scheduled-tasks.create')->with([
                 'daysOfMonth' => $daysOfMonth,
                 'months' => $months,
                 'daysOfWeek' => $daysOfWeek,
@@ -41,7 +54,7 @@ class ScheduleController extends Controller
         });
     }
 
-    public function create(Request $request)
+    public function save(Request $request)
     {
         $data = [
             "daysOfMonth" => $request->daysOfMonth,
@@ -56,7 +69,7 @@ class ScheduleController extends Controller
         if(!$scheduleTask->isSuccess()){
             return redirect()->route('scheduled_tasks.index')->with('alert', ['type' => 'error', 'text' => $scheduleTask->getResultMessage(), 'autoDismiss' => 5]);
         }else{
-            return redirect()->route('tasks.index')->with('alert', ['type' => 'success', 'text' => 'Success! New record in the house', 'autoDismiss' => 5]);
+            return redirect()->route('scheduled_tasks.index')->with('alert', ['type' => 'success', 'text' => 'Success! New record in the house', 'autoDismiss' => 5]);
         }
     }
 }

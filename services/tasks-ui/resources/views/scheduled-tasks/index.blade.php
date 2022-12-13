@@ -24,7 +24,10 @@
                     <div class="card card-primary card-outline">
                         <div class="card-header">
                             <h3 class="card-title">
-                                {{ __('New Record') }}
+                                {{ __('List of Scheduled Tasks') }}
+                                <a class="btn btn-sm btn-primary btn-icon" href="{{ route('scheduled_tasks.create') }}">
+                                    <i class="icon-plus22"></i> {{ __('new scheduling') }}
+                                </a>
                             </h3>
                             <div class="card-tools">
                                 <button type="button" class="btn btn-tool refresh-data">
@@ -32,51 +35,65 @@
                                 </button>
                             </div>
                         </div>
-                        {!! Form::open(['route' => 'scheduled_tasks.create', 'method' => 'POST', 'role' => 'form', 'id' => 'new-form']) !!}
                         <div class="card-body">
-                            <div class="row">
-                                <div class="col-12">
-                                    <div class="form-group">
-                                        <label for="daysOfMonth">Days of Month</label>
-                                        {!! Form::select('daysOfMonth', $daysOfMonth, null, ['class' => 'form-control', 'required']) !!}
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <div class="form-group">
-                                        <label for="months">Months</label>
-                                        {!! Form::select('months', $months, null, ['class' => 'form-control', 'required']) !!}
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <div class="form-group">
-                                        <label for="daysOfWeek">Days of Week</label>
-                                        {!! Form::select('daysOfWeek[]', $daysOfWeek, null, ['class' => 'form-control', 'required', 'multiple']) !!}
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <div class="form-group">
-                                        <label for="durationType">Duration Type</label>
-                                        {!! Form::select('durationType', $durationType, null, ['class' => 'form-control', 'required', 'id' => 'durationType']) !!}
-                                    </div>
-                                </div>
-                                <div class="col-12" id="range">
-                                    <div class="form-group">
-                                        <label for="durationValueRange">Duration Range</label>
-                                        {!! Form::text('durationValueRange', null, ['class' => 'form-control', 'id' => 'durationRange']) !!}
-                                    </div>
-                                </div>
-                                <div class="col-12" id="quantity">
-                                    <div class="form-group">
-                                        <label for="durationValueQuantity">Duration Quantity</label>
-                                        {!! Form::text('durationValueQuantity', null, ['class' => 'form-control']) !!}
-                                    </div>
-                                </div>
-                            </div>
+                            <table class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>{{ __('#') }}</th>
+                                        <th>{{ __('Days of Month') }}</th>
+                                        <th>{{ __('Months') }}</th>
+                                        <th>{{ __('Days of Week') }}</th>
+                                        <th>{{ __('Duration Type') }}</th>
+                                        <th>{{ __('Total Tasks') }}</th>
+                                        <th>{{ __('Total Executed') }}</th>
+                                        <th>{{ __('Execute From') }}</th>
+                                        <th>{{ __('Execute To') }}</th>
+                                        <th>{{ __('Last Execution') }}</th>
+                                        <th>{{ __('Created by') }}</th>
+                                        <th>{{ __('Created at') }}</th>
+                                        <th>{{ __('Actions') }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (count($list->data) <= 0)
+                                        <tr>
+                                            <td colspan="13" class="text-center">{{ __('No data available') }}</td>
+                                        </tr>
+                                    @endif
+
+                                    @foreach ($list->data as $data)
+                                        <tr>
+                                            <td>{{ $data->id }}</td>
+                                            <td>{{ $data->daysOfMonth }}</td>
+                                            <td>{{ $data->months }}</td>
+                                            <td>{{ implode(', ', $data->daysOfWeek) }}</td>
+                                            <td>{{ $data->durationType }}</td>
+                                            <td>{{ $data->totalTasks }}</td>
+                                            <td>{{ $data->totalExecuted }}</td>
+                                            <td>{{ $data->executeFrom }}</td>
+                                            <td>{{ $data->executeTo }}</td>
+                                            <td>{{ $data->lastExecution ?? '--' }}</td>
+                                            <td>{{ $data->user->name }}</td>
+                                            <td>{{ $data->createdAt }}</td>
+                                            <td>
+                                                <a href="{{ route('tasks.index', ['scheduledTaskId' => $data->id]) }}" target="_blank" class="btn btn-success btn-xs"> view tasks</a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
                         </div>
-                        <div class="card-footer">
-                            <button type="submit" class="btn btn-primary">Submit</button>
+                        <div class="card-footer clearfix">
+                            <ul class="pagination pagination-sm m-0 float-right">
+                                @foreach ($list->links as $link)
+                                    @if (is_numeric($link->label))
+                                        <li class="page-item @if($link->active) active @endif">
+                                            <a class="page-link" href="{{ route('scheduled_tasks.index', ['page' => $link->label]) }}">{!! $link->label !!}</a>
+                                        </li>
+                                    @endif
+                                @endforeach
+                            </ul>
                         </div>
-                        {!! Form::close() !!}
                         <div class="overlay card-loading d-none">
                             <i class="fas fa-2x fa-sync fa-spin"></i>
                         </div>
@@ -89,25 +106,5 @@
 
 @section('js')
     <script>
-        $(function(){
-            $('#durationRange').daterangepicker({
-                "locale": {
-                    "format": "DD/MM/YYYY",
-                    "separator": "|"
-                }
-            });
-
-            $(document).on('change', '#durationType', function(){
-                if($(this).val() == 'Date range'){
-                    $('#range').show();
-                    $('#quantity').hide();
-                }else{
-                    $('#range').hide();
-                    $('#quantity').show();
-                }
-            });
-
-            $('#durationType').trigger('change');
-        })
     </script>
 @endsection
