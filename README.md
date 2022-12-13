@@ -10,7 +10,9 @@
 After cloning the repository and being inside the project folder, run the following commands:
 ```sh
 cp .env.example .env
-docker-compose up
+docker-compose up -d
+# To activate the queue worker
+docker exec -it api-tasks php artisan queue:work --queue=default
 ```
 
 ### Optional Step
