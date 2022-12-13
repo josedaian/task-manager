@@ -2,6 +2,7 @@
 ### Services
 - Nginx
 - PHP 8.1
+- MYSQL 8.0
 - Laravel 9.6
 - Redis 6.2.6
 
@@ -14,7 +15,8 @@ docker-compose up
 
 ### Optional Step
 In .env file you can set custom ports for services:
-- Nginx (default: 8000)
+- API (default: 8000)
+- UI (default: 8009)
 - Redis (default: 6379)
 
 ## License
