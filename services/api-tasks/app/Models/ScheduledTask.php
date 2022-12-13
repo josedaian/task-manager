@@ -92,8 +92,8 @@ class ScheduledTask extends Model
                 throw new BadRequestException;
             }
 
-            $scheduledTask->execute_from = Carbon::createFromFormat('d/m/Y H:i:s', $dateRange[0]);
-            $scheduledTask->execute_to = Carbon::createFromFormat('d/m/Y H:i:s', $dateRange[1]);
+            $scheduledTask->execute_from = Carbon::createFromFormat('d/m/Y', $dateRange[0])->startOfDay();
+            $scheduledTask->execute_to = Carbon::createFromFormat('d/m/Y', $dateRange[1])->endOfDay();
         }
 
         $scheduledTask->total_executed = 0;

@@ -29,6 +29,7 @@ services:
     tty: true
     ports:
       - "${PORT}:95"
+      - "${PORT_UI}:96"
     networks:
       - tasks-network
 
@@ -49,6 +50,17 @@ services:
     container_name: api-tasks
     volumes:
       - ./services/api-tasks:/var/www
+    networks:
+      - tasks-network
+    command: /tmp/scripts/run.sh
+
+  tasks-ui:
+    build:
+      context: ./dockerfiles
+      dockerfile: php8-1.dockerfile
+    container_name: tasks-ui
+    volumes:
+      - ./services/tasks-ui:/var/www
     networks:
       - tasks-network
     command: /tmp/scripts/run.sh

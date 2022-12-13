@@ -6,6 +6,7 @@ use App\Exceptions\UnauthorizedException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Resources\v1\TokenResource;
+use App\Http\Resources\v1\UserResource;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
@@ -21,6 +22,9 @@ final class PostLoginController extends Controller
         /** @var User $user */
         $user = Auth::user();
         $token = $user->createToken($request->email, ['*'], Carbon::now()->addHours(8));
-        return $this->successResponse(new TokenResource($token));
+        return $this->successResponse([
+            'token' => new TokenResource($token),
+            'user' => new UserResource($user)
+        ]);
     }
 }

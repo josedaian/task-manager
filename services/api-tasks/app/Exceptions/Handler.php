@@ -74,7 +74,6 @@ class Handler extends ExceptionHandler
                 
             } else {
                 \Log::error(__METHOD__, ['exception' => $e, 'request' => $request]);
-                dd($e);
                 $message = "An error has ocurred";
             }
 

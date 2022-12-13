@@ -12,6 +12,7 @@ Enum TaskFilterGroup: int
     case NEXT_WEEK = 3;
     case NEXT_MONTH = 4;
     case NEXT_YEAR = 5;
+    case NEXT_REMAINING = 6;
 
     public function label(): string
     {
@@ -21,6 +22,7 @@ Enum TaskFilterGroup: int
             TaskFilterGroup::NEXT_WEEK => 'Next Week',
             TaskFilterGroup::NEXT_MONTH => 'Next Month',
             TaskFilterGroup::NEXT_YEAR => 'Next Year',
+            TaskFilterGroup::NEXT_REMAINING => 'Next Remaining',
         };
     }
 
@@ -48,6 +50,10 @@ Enum TaskFilterGroup: int
                 $now->addYear()->startOfYear()->startOfDay(),
                 $now->clone()->endOfYear()->endOfDay(),
             ],
+            TaskFilterGroup::NEXT_REMAINING => [
+                $now->addYears(2)->startOfYear()->startOfDay(),
+                $now->clone()->endOfYear()->endOfDay(),
+            ],
         };
     }
 
@@ -59,6 +65,7 @@ Enum TaskFilterGroup: int
             'Next Week' => TaskFilterGroup::NEXT_WEEK,
             'Next Month' => TaskFilterGroup::NEXT_MONTH,
             'Next Year' => TaskFilterGroup::NEXT_YEAR,
+            'Next Remaining' => TaskFilterGroup::NEXT_REMAINING,
         };
     }
 
