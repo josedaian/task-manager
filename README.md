@@ -11,6 +11,8 @@ After cloning the repository and being inside the project folder, run the follow
 ```sh
 cp .env.example .env
 docker-compose up -d
+# database migrations
+docker exec -it api-tasks php artisan migrate
 # To activate the queue worker
 docker exec -it api-tasks php artisan queue:work --queue=default
 ```
