@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\v1\SuccessResponse;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -13,7 +12,11 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    protected function successResponse($data): JsonResource{
-        return new SuccessResponse($data);
+    protected function successResponse($data): JsonResource
+    {
+        switch (config('app.api.version')) {
+            case 1:
+                return new \App\Http\Resources\v1\SuccessResponse($data);
+        }
     }
 }

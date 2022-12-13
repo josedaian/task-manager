@@ -53,18 +53,28 @@ class Handler extends ExceptionHandler
         $this->renderable(function (Throwable $e, $request) {
             $httpStatus = Response::HTTP_INTERNAL_SERVER_ERROR;
             
-            if($e instanceof NotFoundHttpException){
-                $message = !empty($e->getMessage()) ? $e->getMessage() : "Resource does not exist";
+            if ($e instanceof NotFoundHttpException) {
                 $httpStatus = Response::HTTP_NOT_FOUND;
-            }else if($e instanceof QueryException){
+                
+            } else if($e instanceof \Illuminate\Auth\AuthenticationException) {
+                $message = !empty($e->getMessage()) ? $e->getMessage() : "Invalid token";
+                $httpStatus = Response::HTTP_UNAUTHORIZED;
 
+            } else if ($e instanceof \UnhandledMatchError) {
+                $message = !empty($e->getMessage()) ? $e->getMessage() : "Unmatched value";
+                $httpStatus = Response::HTTP_BAD_REQUEST;
+                
+            } else if($e instanceof QueryException) {
+                
                 if($e->getCode() === '23000'){
                     $message = "Duplicade entry. Record has already exists.";
                 }else{
-                    $message = !empty($e->getMessage()) ? $e->getMessage() : "Internal DB error";
+                    $message = "Internal DB error";
                 }
-
-            }else{
+                
+            } else {
+                \Log::error(__METHOD__, ['exception' => $e, 'request' => $request]);
+                dd($e);
                 $message = "An error has ocurred";
             }
 

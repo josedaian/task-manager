@@ -4,7 +4,8 @@ namespace App\Http\Resources\v1;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ErrorResponse extends JsonResource {
+class ErrorResponse extends JsonResource 
+{
     private $exception;
 
     public static function fromException(\Exception $exception): ErrorResponse 

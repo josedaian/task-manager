@@ -17,13 +17,13 @@ return new class extends Migration
             $table->id();
             $table->integer('days_of_month');
             $table->integer('months');
-            $table->integer('days_of_week');
+            $table->text('days_of_week');
             $table->integer('duration_type');
             $table->integer('total_tasks');
             $table->integer('total_executed');
             $table->dateTime('execute_from');
             $table->dateTime('execute_to');
-            $table->dateTime('last_execution');
+            $table->dateTime('last_execution')->nullable();
             $table->integer('status');
             $table->foreignId('user_id')->constrained();
             $table->timestamps();
